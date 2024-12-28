@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: k-shop
+  datasource:
+    url: jdbc:postgresql://localhost:9999/ecommerce
+    username: kimthoy
+    password: kimthoy2001
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+      use_sql_comments: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+liquibase:
+  enabled: true
+  change-log: classpath:db/changelog/db.changelog-master.yaml
+upload:
+  path: ./uploads/images
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG

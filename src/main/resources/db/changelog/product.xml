@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Create role table -->
+    <changeSet id="product" author="kimthoy@gmail.com" runOnChange="true">
+
+            <preConditions onFail="MARK_RAN">
+                <not>
+                    <tableExists tableName="role"/>
+                </not>
+            </preConditions>
+            <createTable tableName="role">
+                <column name="id" type="int4" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="role" type="VARCHAR(255)"/>
+            </createTable>
+
+
+
+
+        <!-- Create users table -->
+        <createTable tableName="users">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" />
+            <column name="password" type="varchar(255)" />
+            <column name="phone" type="varchar(50)" />
+            <column name="address" type="varchar(255)" />
+            <column name="is_active" type="boolean" defaultValue="true" />
+            <column name="create_at" type="timestamp" />
+            <column name="role_id" type="int4" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="users"
+                baseColumnNames="role_id"
+                constraintName="fk_role_id"
+                referencedTableName="role"
+                referencedColumnNames="id"/>
+
+    <!-- Create categories table -->
+
+        <createTable tableName="categories">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" />
+        </createTable>
+
+
+    <!-- Create brands table -->
+
+        <createTable tableName="brands">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="brand_name" type="varchar(255)" />
+            <column name="factory_date" type="timestamp" />
+        </createTable>
+
+
+    <!-- Create models table -->
+
+        <createTable tableName="models">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="model_name" type="varchar(255)" />
+            <column name="brand_id" type="int4" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="models"
+                baseColumnNames="brand_id"
+                constraintName="fk_brand_id"
+                referencedTableName="brands"
+                referencedColumnNames="id"/>
+
+
+    <!-- Create products table -->
+
+        <createTable tableName="products">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="varchar(255)" />
+            <column name="name" type="varchar(255)" />
+            <column name="price" type="varchar(255)" />
+            <column name="size" type="varchar(50)" />
+            <column name="quantity" type="varchar(50)" />
+            <column name="image" type="varchar(255)" />
+            <column name="description" type="varchar(255)" />
+            <column name="added_to_stock" type="timestamp" />
+            <column name="category_id" type="int4" />
+            <column name="status" type="boolean" defaultValue="true" />
+            <column name="brand_id" type="int4" />
+            <column name="model_id" type="int4" />
+            <column name="supplier_id" type="int4" />
+            <column name="create_by" type="int4" />
+            <column name="create_at" type="timestamp" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="products"
+                baseColumnNames="create_by"
+                constraintName="fk_create_by"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                baseTableName="products"
+                baseColumnNames="category_id"
+                constraintName="fk_category_id"
+                referencedTableName="categories"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                baseTableName="products"
+                baseColumnNames="brand_id"
+                constraintName="fk_brand_id"
+                referencedTableName="brands"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                baseTableName="products"
+                baseColumnNames="model_id"
+                constraintName="fk_model_id"
+                referencedTableName="models"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                baseTableName="products"
+                baseColumnNames="supplier_id"
+                constraintName="fk_supplier_id"
+                referencedTableName="suppliers"
+                referencedColumnNames="id"/>
+
+
+        <createTable tableName="customer_order">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="int4" />
+            <column name="cus_name" type="varchar(255)" />
+            <column name="cus_gender" type="varchar(50)" />
+            <column name="cus_address" type="varchar(255)" />
+            <column name="product_price" type="float8" />
+            <column name="status" type="boolean" />
+            <column name="create_by" type="int4" />
+            <column name="create_at" type="timestamp" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="customer_order"
+                baseColumnNames="product_id"
+                constraintName="fk_product_id"
+                referencedTableName="products"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                baseTableName="customer_order"
+                baseColumnNames="create_by"
+                constraintName="fk_create_by"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+
+
+    <!-- Create profile table -->
+
+        <createTable tableName="profile">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="profile_name" type="varchar(255)" />
+            <column name="profile_image" type="varchar(255)" />
+            <column name="email" type="varchar(255)" />
+            <column name="phone_number" type="varchar(50)" />
+            <column name="address" type="varchar(255)" />
+            <column name="user_id" type="int4" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="profile"
+                baseColumnNames="user_id"
+                constraintName="fk_user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+
+<!--User Role Table-->
+        <createTable tableName="user_role">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="int4" />
+            <column name="role_id" type="int4" />
+        </createTable>
+
+
+        <createTable tableName="suppliers">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" />
+            <column name="phone" type="varchar(255)" />
+            <column name="address" type="varchar(255)" />
+            <column name="email" type="varchar(255)" />
+            <column name="create_at" type="timestamp" />
+        </createTable>
+
+
+<!--        Customer Table-->
+        <createTable tableName="customers">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" />
+            <column name="gender" type="varchar(255)" />
+            <column name="phone" type="varchar(255)" />
+            <column name="email" type="varchar(255)" />
+            <column name="create_at" type="timestamp" />
+        </createTable>
+
+<!--        Order Table-->
+        <createTable tableName="orders">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="customer_id" type="int4" />
+            <column name="status" type="varchar(255)" defaultValue="pending" />
+            <column name="order_date" type="timestamp"  />
+            <column name="create_at" type="timestamp" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="orders"
+                baseColumnNames="customer_id"
+                constraintName="fk_customer_id"
+                referencedTableName="customers"
+                referencedColumnNames="id"/>
+
+<!--Order Detail Table-->
+        <createTable tableName="order_details">
+            <column name="id" type="int4">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="order_id" type="int4" />
+            <column name="product_id" type="int4"  />
+            <column name="quantity" type="int4"  />
+            <column name="price" type="decimal(10,2)"  />
+            <column name="create_at" type="timestamp" />
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="order_details"
+                baseColumnNames="order_id"
+                constraintName="fk_order_id"
+                referencedTableName="orders"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                baseTableName="order_details"
+                baseColumnNames="product_id"
+                constraintName="fk_product_id"
+                referencedTableName="products"
+                referencedColumnNames="id"/>
+
+        <!-- Create stock table -->
+
+            <preConditions onFail="MARK_RAN">
+                <not>
+                    <tableExists tableName="stock"/>
+                </not>
+            </preConditions>
+            <createTable tableName="stocks">
+                <column name="id" type="int4" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="product_id" type="int4">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="location" type="varchar(255)">
+                    <constraints nullable="true"/>
+                </column>
+                <column name="quantity" type="int4">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="price" type="decimal(10,2)">
+                    <constraints nullable="false"/>
+                </column>
+
+                <column name="supplier_id" type="int4">
+                    <constraints nullable="true"/>
+                </column>
+                <column name="last_updated" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            </createTable>
+            <addForeignKeyConstraint
+                    baseTableName="stocks"
+                    baseColumnNames="product_id"
+                    constraintName="fk_stock_product_id"
+                    referencedTableName="products"
+                    referencedColumnNames="id"/>
+            <addForeignKeyConstraint
+                    baseTableName="stocks"
+                    baseColumnNames="supplier_id"
+                    constraintName="fk_stock_supplier_id"
+                    referencedTableName="suppliers"
+                    referencedColumnNames="id"/>
+        <sql>
+            ALTER TABLE stocks
+            ADD COLUMN total_price DECIMAL(10,2) GENERATED ALWAYS AS (price * quantity) STORED;
+        </sql>
+
+    </changeSet>
+
+
+</databaseChangeLog>
